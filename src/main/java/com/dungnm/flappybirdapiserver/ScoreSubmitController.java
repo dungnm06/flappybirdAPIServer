@@ -42,6 +42,7 @@ public class ScoreSubmitController {
         } finally {
             dao.closeConnection();
         }
+        result.setResult(true);
         result.setResultData(resultData);
         return result;
     }
@@ -53,11 +54,7 @@ public class ScoreSubmitController {
         JsonResult result = new JsonResult();
         ScoreDaoImpl dao = new ScoreDaoImpl();
         try {
-            if(dao.isExist(account)){
-                result.setResult(true);
-            } else {
-                result.setResult(false);
-            }
+            result.setResult(dao.isExist(account));
         } catch (Exception ex) {
             result.setResult(false);
             result.setResultData("DBConnectionError");
@@ -75,19 +72,16 @@ public class ScoreSubmitController {
     public JsonResult submit(ScoreForm form){
         JsonResult result = new JsonResult();
         ScoreDaoImpl dao = new ScoreDaoImpl();
+        boolean submitResult = false;
         try {
-            if(dao.isExist(form.getAccount())){
-                dao.update(form);
-            } else {
-                dao.insert(form);
-            }
+            submitResult = dao.isExist(form.getAccount()) ? dao.update(form) : dao.insert(form);
         } catch (Exception ex) {
             result.setResult(false);
             result.setResultData("DBConnectionError");
         } finally {
             dao.closeConnection();
         }
-        result.setResult(true);
+        result.setResult(submitResult);
         return result;
     }
     
