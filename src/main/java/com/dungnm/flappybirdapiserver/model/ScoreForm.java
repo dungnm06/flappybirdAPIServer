@@ -16,13 +16,16 @@ public class ScoreForm implements Serializable {
     private String account;
     
     private int score;
+    
+    private String mDate;
 
     public ScoreForm() {
     }
 
-    public ScoreForm(String account, int score) {
+    public ScoreForm(String account, int score, String mDate) {
         this.account = account;
         this.score = score;
+        this.mDate = mDate;
     }
 
     public String getAccount() {
@@ -39,5 +42,13 @@ public class ScoreForm implements Serializable {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public String getmDate() {
+        return mDate;
+    }
+
+    public void setmDate(String mDate) {
+        this.mDate = mDate;
     }
 }

@@ -1,3 +1,7 @@
-com\dungnm\flappybirdapiserver\model\SubmitResult.class
+com\dungnm\flappybirdapiserver\dao\ScoreDao.class
 com\dungnm\flappybirdapiserver\model\ScoreForm.class
+com\dungnm\flappybirdapiserver\dao\BaseDao.class
+com\dungnm\flappybirdapiserver\dao\ScoreDaoImpl.class
+com\dungnm\flappybirdapiserver\model\SubmitResult.class
+com\dungnm\flappybirdapiserver\model\JsonResult.class
 com\dungnm\flappybirdapiserver\ScoreSubmitController.class

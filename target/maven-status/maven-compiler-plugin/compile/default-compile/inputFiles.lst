@@ -1,3 +1,7 @@
-C:\Users\Tewi\Documents\NetBeansProjects\flappybirdAPIServer\src\main\java\com\dungnm\flappybirdapiserver\model\ScoreForm.java
-C:\Users\Tewi\Documents\NetBeansProjects\flappybirdAPIServer\src\main\java\com\dungnm\flappybirdapiserver\ScoreSubmitController.java
-C:\Users\Tewi\Documents\NetBeansProjects\flappybirdAPIServer\src\main\java\com\dungnm\flappybirdapiserver\model\SubmitResult.java
+C:\Users\Tewi\Desktop\flappybirdAPIServer\flappybirdAPIServer\src\main\java\com\dungnm\flappybirdapiserver\dao\ScoreDao.java
+C:\Users\Tewi\Desktop\flappybirdAPIServer\flappybirdAPIServer\src\main\java\com\dungnm\flappybirdapiserver\dao\ScoreDaoImpl.java
+C:\Users\Tewi\Desktop\flappybirdAPIServer\flappybirdAPIServer\src\main\java\com\dungnm\flappybirdapiserver\ScoreSubmitController.java
+C:\Users\Tewi\Desktop\flappybirdAPIServer\flappybirdAPIServer\src\main\java\com\dungnm\flappybirdapiserver\model\JsonResult.java
+C:\Users\Tewi\Desktop\flappybirdAPIServer\flappybirdAPIServer\src\main\java\com\dungnm\flappybirdapiserver\model\ScoreForm.java
+C:\Users\Tewi\Desktop\flappybirdAPIServer\flappybirdAPIServer\src\main\java\com\dungnm\flappybirdapiserver\dao\BaseDao.java
+C:\Users\Tewi\Desktop\flappybirdAPIServer\flappybirdAPIServer\src\main\java\com\dungnm\flappybirdapiserver\model\SubmitResult.java
