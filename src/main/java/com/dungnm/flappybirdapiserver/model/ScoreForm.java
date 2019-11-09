@@ -13,6 +13,8 @@ import java.io.Serializable;
  */
 public class ScoreForm implements Serializable {
     
+    private int rank;
+    
     private String account;
     
     private int score;
@@ -22,7 +24,8 @@ public class ScoreForm implements Serializable {
     public ScoreForm() {
     }
 
-    public ScoreForm(String account, int score, String mDate) {
+    public ScoreForm(int rank, String account, int score, String mDate) {
+        this.rank = rank;
         this.account = account;
         this.score = score;
         this.mDate = mDate;
@@ -50,5 +53,13 @@ public class ScoreForm implements Serializable {
 
     public void setmDate(String mDate) {
         this.mDate = mDate;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 }

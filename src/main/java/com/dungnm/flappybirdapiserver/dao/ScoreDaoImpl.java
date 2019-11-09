@@ -9,6 +9,7 @@ import com.dungnm.flappybirdapiserver.model.ScoreForm;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,6 +22,8 @@ import javax.enterprise.context.Dependent;
  */
 @Dependent
 public class ScoreDaoImpl extends BaseDao implements ScoreDao {
+    
+    private final SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public boolean isExist(String account) throws Exception {
@@ -79,11 +82,11 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
 
     @Override
     public List<ScoreForm> getTop100() throws Exception {
-        ResultSet rs = getData("SELECT TOP 100 * FROM score_holder ORDER BY score DESC");
+        ResultSet rs = getData("SELECT TOP 100 s.*, ROW_NUMBER() OVER(ORDER BY s.score DESC, s.mdate ASC) AS 'Rank' FROM score_holder s ORDER BY s.score DESC, s.mdate ASC");
         List<ScoreForm> list = new ArrayList<>();
         try {
             while(rs.next()){
-                list.add(new ScoreForm(rs.getString(2), rs.getInt(3), rs.getString(4)));
+                list.add(new ScoreForm(rs.getInt(5), rs.getString(2), rs.getInt(3), formater.format(rs.getTimestamp(4))));
             }
             rs.close();
         } catch (SQLException ex) {
@@ -95,16 +98,22 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
 
     @Override
     public ScoreForm getSelfBest(String account) throws Exception {
-        String sql = "SELECT * FROM [score_holder] WHERE [account] = ?";
+        String sql = "SELECT count(*) AS 'rank', s.account, s.score, s.mdate\n" +
+                        "FROM score_holder p CROSS JOIN\n" +
+                        "     (SELECT account, score, mdate FROM score_holder WHERE account = ?) s\n" +
+                        "WHERE p.score > s.score or\n" +
+                        "      (p.score = s.score and p.mdate <= s.mdate)\n" +
+                        "GROUP BY s.account, s.score, s.mdate;";
         ScoreForm result = new ScoreForm();
         try {
             try (PreparedStatement pre = connection.prepareStatement(sql)) {
                 pre.setString(1, account);
                 ResultSet rs = pre.executeQuery();
                 while(rs.next()){
+                    result.setRank(rs.getInt(1));
                     result.setAccount(rs.getString(2));
                     result.setScore(rs.getInt(3));
-                    result.setmDate(rs.getString(4));
+                    result.setmDate(formater.format(rs.getTimestamp(4)));
                 }
             }
         } catch (SQLException ex) {
