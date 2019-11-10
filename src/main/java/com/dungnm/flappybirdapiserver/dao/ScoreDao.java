@@ -23,4 +23,6 @@ public interface ScoreDao {
     public List<ScoreForm> getTop100() throws Exception;
     
     public ScoreForm getSelfBest(String account) throws Exception;
+    
+    public void closeConnection();
 }

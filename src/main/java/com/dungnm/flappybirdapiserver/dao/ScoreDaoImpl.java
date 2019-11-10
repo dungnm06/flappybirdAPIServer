@@ -6,22 +6,43 @@
 package com.dungnm.flappybirdapiserver.dao;
 
 import com.dungnm.flappybirdapiserver.model.ScoreForm;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.Dependent;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
  * @author Tewi
  */
-@Dependent
-public class ScoreDaoImpl extends BaseDao implements ScoreDao {
+@ApplicationScoped
+public class ScoreDaoImpl implements ScoreDao {
+    
+    protected Connection connection;
+ 
+    public final Connection getDBConnection()throws Exception {
+        String url = "jdbc:sqlserver://prm391flappybird.database.windows.net:1433;database=flappybird;user=dungnm@prm391flappybird;password={prm391flappybird@};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        return DriverManager.getConnection(url);
+    }
+    
+    @PostConstruct
+    public void init() {
+        try {
+            this.connection = getDBConnection();
+        } catch (Exception ex) {
+            Logger.getLogger(BaseDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     private final SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -123,4 +144,32 @@ public class ScoreDaoImpl extends BaseDao implements ScoreDao {
         return result;
     }
     
+    public ResultSet getData(String sql) {
+        ResultSet rs = null;
+        Statement state;
+        try {
+            state = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            rs = state.executeQuery(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(BaseDao.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(BaseDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+    
+    @Override
+    public void closeConnection() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BaseDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

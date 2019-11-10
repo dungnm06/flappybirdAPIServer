@@ -5,13 +5,12 @@
  */
 package com.dungnm.flappybirdapiserver;
 
-import com.dungnm.flappybirdapiserver.dao.ScoreDaoImpl;
+import com.dungnm.flappybirdapiserver.dao.ScoreDao;
 import com.dungnm.flappybirdapiserver.model.JsonResult;
 import com.dungnm.flappybirdapiserver.model.ScoreForm;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -27,12 +26,14 @@ import javax.ws.rs.core.MediaType;
 @Path("score")
 public class ScoreSubmitController {
     
+    @Inject
+    private ScoreDao dao;
+    
     @GET
     @Path("top100")
     @Produces(MediaType.APPLICATION_JSON)
     public JsonResult submit(){
         JsonResult result = new JsonResult();
-        ScoreDaoImpl dao = new ScoreDaoImpl();
         List<ScoreForm> resultData = new ArrayList();
         try {
             resultData = dao.getTop100();
@@ -40,7 +41,7 @@ public class ScoreSubmitController {
             result.setResult(false);
             result.setResultData("DBConnectionError");
         } finally {
-            dao.closeConnection();
+//            dao.closeConnection();
         }
         result.setResult(true);
         result.setResultData(resultData);
@@ -52,14 +53,13 @@ public class ScoreSubmitController {
     @Produces(MediaType.APPLICATION_JSON)
     public JsonResult checkExist(@QueryParam("account") String account){
         JsonResult result = new JsonResult();
-        ScoreDaoImpl dao = new ScoreDaoImpl();
         try {
             result.setResult(dao.isExist(account));
         } catch (Exception ex) {
             result.setResult(false);
             result.setResultData("DBConnectionError");
         } finally {
-            dao.closeConnection();
+//            dao.closeConnection();
         }
         return result;
     }
@@ -71,15 +71,19 @@ public class ScoreSubmitController {
     @Produces(MediaType.APPLICATION_JSON)
     public JsonResult submit(ScoreForm form){
         JsonResult result = new JsonResult();
-        ScoreDaoImpl dao = new ScoreDaoImpl();
         boolean submitResult = false;
         try {
+            ScoreForm selfBest = dao.getSelfBest(form.getAccount());
+            if(selfBest.getScore() >= form.getScore()){
+                result.setResult(true);
+                return result;
+            }
             submitResult = dao.isExist(form.getAccount()) ? dao.update(form) : dao.insert(form);
         } catch (Exception ex) {
             result.setResult(false);
             result.setResultData("DBConnectionError");
         } finally {
-            dao.closeConnection();
+//            dao.closeConnection();
         }
         result.setResult(submitResult);
         return result;
@@ -91,14 +95,13 @@ public class ScoreSubmitController {
     public JsonResult getSelfTopScore(@QueryParam("account") String account){
         JsonResult result = new JsonResult();
         ScoreForm resultData = new ScoreForm();
-        ScoreDaoImpl dao = new ScoreDaoImpl();
         try {
             resultData = dao.getSelfBest(account);
         } catch (Exception ex) {
             result.setResult(false);
             result.setResultData("DBConnectionError");
         } finally {
-            dao.closeConnection();
+//            dao.closeConnection();
         }
         result.setResult(true);
         result.setResultData(resultData);

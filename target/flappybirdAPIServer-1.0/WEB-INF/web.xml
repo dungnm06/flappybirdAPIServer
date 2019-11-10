@@ -10,10 +10,16 @@
         </session-timeout>
     </session-config>
     <servlet>
-        <servlet-name>javax.ws.rs.core.Application</servlet-name>
+    <servlet-name>ScoreApplication</servlet-name>
+    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+    <init-param>
+        <param-name>javax.ws.rs.Application</param-name>
+        <param-value>com.dungnm.flappybirdapiserver.ScoreApplication</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>javax.ws.rs.core.Application</servlet-name>
+        <servlet-name>ScoreApplication</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 </web-app>
